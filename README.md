@@ -11,3 +11,6 @@ starter files for a RPi workshop includes
    - app.py
  - Schematics
    - various Fritzing files for wiring the ciruit to accompany the program files
+ - workshop notes
+   - my notes on setting up the pi for the workshop
+
