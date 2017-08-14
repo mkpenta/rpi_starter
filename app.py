@@ -1,21 +1,21 @@
 import web
 import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(18, GPIO.IN)
+GPIO.setup(23, GPIO.OUT)
+GPIO.setup(24, GPIO.OUT)
 
 urls = (
-
     '/read', 'read',
     '/write', 'write',
     '/setup', 'setup'
-
 )
 app = web.application(urls, globals())
 
 class setup:
     def GET(self):
-        get_data=web.input(p="17", s="out")
+        get_data=web.input(p="23", s="out")
         pin = int(get_data.p)
         state = get_data.s
         if state == "out":
@@ -26,7 +26,7 @@ class setup:
 
 class write:
     def GET(self):
-        get_data=web.input(p="17", s="0")
+        get_data=web.input(p="23", s="0")
         printout = "NO DATA"
         pin = int(get_data.p)
         state = int(get_data.s)
@@ -36,7 +36,7 @@ class write:
 
 class read:
 	def GET(self):
-		get_data=web.input(p="17")
+		get_data=web.input(p="18")
 		printout = "NO DATA"
 		pin = int(get_data.p)
 		return str(GPIO.input(pin))
