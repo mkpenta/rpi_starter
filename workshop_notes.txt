@@ -105,8 +105,8 @@ python and C
 sudo apt-get install wiringPi
 
 LED examples
-https://raw.githubusercontent.com/mkpenta/rpi_starter/master/LED_examples/LED.c
-https://raw.githubusercontent.com/mkpenta/rpi_starter/master/LED_examples/LED.py
+https://raw.githubusercontent.com/mkpenta/rpi_starter/master/GPIO_examples/LED.c
+https://raw.githubusercontent.com/mkpenta/rpi_starter/master/GPIO_examples/LED.py
 
 
 running a python web server
