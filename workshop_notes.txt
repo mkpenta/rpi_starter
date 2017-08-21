@@ -1,8 +1,10 @@
 The first step is to flash the img of the OS on your SD card. Raspbian (a version of Debian Linux for Raspberry Pi) seems to be the standard. The current implementation is called Jessie. Two options are available for download – Jessie and Jessie Lite. Jessie contains a GUI and some useful software. Jessie is much simpler and only provides a command line interface. 
 
+** Jessie is now Stretch  (Wheezy-> Jesse-> Stretch)
+
 The Jessie download is over 4GB. The classroom kits to which I am restricted are 4GB SD card. I have a larger card, but not a classrooms worth. I will demonstrate how to load Jessie Lite on the 4GB card and all other instructions will focus on Jessie Lite. All commands from Jessie Lite run on Jessie, however Jessie may offer graphical interfaces to modify these same settings. 
 
-If you have a spacious SD card, you can also use NOOBS to setup the OS, but with the restrictions above, I will not discuss it here. 
+If you have a spacious SD card, you can also use NOOBS to setup the OS, but with the restrictions above, I will not be trying it here. 
 
 Download Jessie/Jessie Lite here - https://www.raspberrypi.org/downloads/raspbian/
 
@@ -15,35 +17,36 @@ My goals for setup:
  - enable ssh
  - enable uart (serial communication) in case I want to use a command console cable
 
-Headless setup:
-I want to set this up so I can access the by without a monitor and keyboard directly connected 
+Wired Ehternet - setting a temporary static IP in order to connect through ssh. Once booted, we can change the settings to modify that permanently or allow for dynamic addressing  - we will give a unicue host name so we can access the device by name instead of ip
 
-enabling ssh
-This could not be easier! With the SD card connected to a computer, just create a blank file in the root directory called “ssh” – no extension. When the Pi boots, it will  see this file, enable ssh and delete the file. https://www.raspberrypi.org/documentation/remote-access/ssh/#
-
-setting a temporary static IP in order to connect through ssh. Once booted, we can change the settings to modify that permanently or allow for dynamic addressing  - we will give a unicue host name so we can access the device by name instead of ip
-
-(see https://www.raspberrypi.org/forums/viewtopic.php?f=91&t=24993 and https://thepihut.com/blogs/raspberry-pi-tutorials/19668676-renaming-your-raspberry-pi-the-hostname
-)
+(see https://www.raspberrypi.org/forums/viewtopic.php?f=91&t=24993 and https://thepihut.com/blogs/raspberry-pi-tutorials/19668676-renaming-your-raspberry-pi-the-hostnames)
 
 edit cmdline.txt so it looks like the statement below. (only the last part is changed – ip:xxx.xxx.xxx.xxx. where xxx is your desired ip address)  You can aslo use a program like nmap to probe the networks and try to find the correct ip.
 
 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=PARTUUID=a8790229-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet init=/usr/lib/raspi-config/init_resize.sh ip=10.0.0.142
 
-setup wireless data (optional)
-we can set this up after connecting with the Ethernet cord, but we can also do it at boot. Add a file called wpa_supplicant.conf in the boot folder. after boot, these settings can be changed in /etc/wpa-supplicant/wpa-supplicat.conf
+setup wireless (optional) 
+we can set this up after connecting with the Ethernet cord, but we can also do it at boot. [Add a file called wpa_supplicant.conf in the boot folder. after boot, these settings can be changed in /etc/wpa-supplicant/wpa-supplicat.conf] **this sometimes works, it may be the settings aren't quite correct**
+
+Add this to the WPA supplicant file:
 
 network={
     ssid="SSID"
     psk="pass"
     key_mgmt=WPA-PSK
-}
+}for command console through serial (requires a console cable)
+
+enabling ssh
+ - use raspi-config if you have a monitor and keyboard
+ - Headless - This could not be easier! With the SD card connected to a computer, just create a blank file in the root directory called “ssh” – no extension. When the Pi boots, it will  see this file, enable ssh and delete the file. https://www.raspberrypi.org/documentation/remote-access/ssh/#
+
 
 Enable uart (optional)
 for command console through serial (requires a console cable)
-Edit config.txt. Add these lines at the end of the file.
+- with monitor - rasppi-config
+- headless - Edit config.txt. Add these lines at the end of the file.
 	##enable serial com 
-enable uart=1
+	enable_uart=1
 
 more on the console cable and how to connect:
 https://learn.adafruit.com/adafruits-raspberry-pi-lesson-5-using-a-console-cable/test-and-configure
@@ -57,27 +60,30 @@ SSh into your device using the ip specified at boot. The default username is pi 
 
 change your password using the passwd command
 
-to create a unique host name two files need to be edited
-sudo nano /ect/hosts
+Setting the hostname - choose one
+1. Use raspi-config
+2. to create a unique host name two files need to be edited
+	sudo nano /ect/hosts
 
-hosts should look like this
-127.0.0.1       localhost
-::1             localhost ip6-localhost ip6-loopback
-ff02::1         ip6-allnodes
-ff02::2         ip6-allrouters
+	hosts should look like this
+	127.0.0.1       localhost
+	::1             localhost ip6-localhost ip6-loopback
+	ff02::1         ip6-allnodes
+	ff02::2         ip6-allrouters
 
-127.0.1.1      	raspberrypi
+	127.0.1.1      	raspberrypi
 
-modify the last line to a unique hostname like
-127.0.1.1      	penta-raz-pi
+	modify the last line to a unique hostname like
+	127.0.1.1      	penta-raz-pi
 
-save and close the file 
+	save and close the file 
 
-sudo nano /etc/hostnames
-remove any hostname and add the one you created above
-save and exit
+	sudo nano /etc/hostnames
+	remove any hostname and add the one you created above
+	save and exit
 
-Shutdown the by, remove the sd card. edit the commandline text to remove the ip we added earlier
+Shutdown the pi
+( if you are doing a headless setup and set a static ip, then remove the sd card. edit the commandline text to remove the ip added in that step)
 reboot the pi with the sd card
 
 ssh into the pi using the address using the host name: ssh pi@penta-raz-pi.local
@@ -94,7 +100,7 @@ sudo service apache2 restart
 you can use the hostname.local in the browser or the ip address to access the site - http://hostname.local
 
 all webfiles are in /var/www/html
-you will need to use sudo to edit those files or you can change the ownership of them to your user (chown)
+you will need to use sudo to edit those files or you can change the ownership of them to your user (sudo chown)
 
 wget https://raw.githubusercontent.com/mkpenta/rpi_starter/master/index.html
 wget https://raw.githubusercontent.com/mkpenta/rpi_starter/master/style.css
@@ -120,16 +126,18 @@ https://raw.githubusercontent.com/mkpenta/rpi_starter/master/app.py
 
 run the program and go to hostname.local:8080
 
+**NICE PINOUT***
+http://www.pighixxx.com/test/wp-content/uploads/2015/06/raspberry.png
 
-
-
+***mounting a USB Drive****
 sudo mkdir /mnt/usb
 sudo mount -t vfat -o uid=pi,gid=pi /dev/sda1 /mnt/usb
 ls -l /mnt/usb
 
 
-
-http://www.pighixxx.com/test/wp-content/uploads/2015/06/raspberry.png
-
+** URL to this repository 
 https://github.com/mkpenta/rpi_starter
+
+
+
 
