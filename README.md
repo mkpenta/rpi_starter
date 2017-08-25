@@ -13,4 +13,6 @@ starter files for a RPi workshop includes
    - various Fritzing files for wiring the ciruit to accompany the program files
  - workshop notes
    - my notes on setting up the pi for the workshop
+ - Bootcamp Reflections
+  - my notes on the actual bootcamp
 
