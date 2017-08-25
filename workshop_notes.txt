@@ -28,13 +28,19 @@ dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=PARTUUID=a8790229-
 setup wireless (optional) 
 we can set this up after connecting with the Ethernet cord, but we can also do it at boot. [Add a file called wpa_supplicant.conf in the boot folder. after boot, these settings can be changed in /etc/wpa-supplicant/wpa-supplicat.conf] **this sometimes works, it may be the settings aren't quite correct**
 
-Add this to the WPA supplicant file:
+Add this to the WPA supplicant file: (http://weworkweplay.com/play/automatically-connect-a-raspberry-pi-to-a-wifi-network/, https://www.thepolyglotdeveloper.com/2016/08/connect-multiple-wireless-networks-raspberry-pi/)
 
+country=US
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+ 
 network={
-    ssid="SSID"
-    psk="pass"
+    ssid="network_ssid_here"
+    psk="wpa_password_here"
     key_mgmt=WPA-PSK
-}for command console through serial (requires a console cable)
+}
+
+for command console through serial (requires a console cable)
 
 enabling ssh
  - use raspi-config if you have a monitor and keyboard
